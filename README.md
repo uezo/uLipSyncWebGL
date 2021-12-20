@@ -5,7 +5,7 @@ An experimental plugin to use [uLipSync](https://github.com/hecomi/uLipSync) on 
 
 # 😃 Usage
 
-1. Import uLipSyncWebGL.unitypackage to your project.
+1. Import [uLipSyncWebGL.unitypackage](https://github.com/uezo/uLipSyncWebGL/releases) to your project.
 
 1. Attach `uLipSyncWebGL.cs` to the object `uLipSync` is attached.
 
