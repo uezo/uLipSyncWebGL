@@ -26,7 +26,7 @@ namespace ChatdollKit.Extension.uLipSync
 
         private void SetAudioSampleData(string inputString)
         {
-            if (!ulipSyncScript.audioSource)
+            if (!ulipSyncScript.audioSourceProxy)
             {
                 var samplingData = inputString.Split(',').Select(s => Convert.ToSingle(s)).ToArray();
                 ulipSyncScript.OnDataReceived(samplingData, 1);
