@@ -5,7 +5,7 @@ An experimental plugin to use [uLipSync](https://github.com/hecomi/uLipSync) on 
 
 # 😃 Usage
 
-1. Import [uLipSync WebGL Edition](https://github.com/uezo/uLipSyncWebGL/releases) or import official [uLipSync](https://github.com/hecomi/uLipSync/releases)(v2.2.0) and [remove some files and comment out a method](#✅-use-official-ulipsync).
+1. Import [uLipSync WebGL Edition](https://github.com/uezo/uLipSyncWebGL/releases) or import official [uLipSync](https://github.com/hecomi/uLipSync/releases)(v3.0.2) and [Add preprocessor directives for conditional compilation](#-use-official-ulipsync).
 
 1. Import [uLipSyncWebGL.unitypackage](https://github.com/uezo/uLipSyncWebGL/releases) to your project.
 
@@ -30,14 +30,66 @@ We provide this plugin as an experimental product because:
 
 # ✅ Use official uLipSync
 
-The official uLipSync uses microphone that is not supported on WebGL and this causes build error. Follow these steps to solve this issue: 
+The official uLipSync uses microphone that is not supported on WebGL and this causes build error. Add preprocessor directives for conditional compilation to solve this issue:
 
-1. Remove files in uLipSync
-    - Runtime/uLipSyncMicrophone
-    - Runtime/Core/MicUtil
-    - Editor/uLipSyncMicrophoneEditor
+MicUtil
 
-1. Comment out `DrawMicSelector` method in `Editor/EditorUtil`
+```csharp
+using UnityEngine;
+using System.Collections.Generic;
+
+namespace uLipSync
+{
+    public struct MicDevice
+    {
+        public string name;
+        public int index;
+        public int minFreq;
+        public int maxFreq;
+    }
+
+    public static class MicUtil
+    {
+        public static List<MicDevice> GetDeviceList()
+        {
+            var list = new List<MicDevice>();
+
+#if !UNITY_WEBGL || UNITY_EDITOR
+            for (int i = 0; i < Microphone.devices.Length; ++i)
+            {
+                var info = new MicDevice
+                {
+                    name = Microphone.devices[i],
+                    index = i
+                };
+                Microphone.GetDeviceCaps(info.name, out info.minFreq, out info.maxFreq);
+                list.Add(info);
+            }
+#endif
+            return list;
+        }
+    }
+}
+```
+
+uLipSyncMicrophone
+
+```csharp
+using UnityEngine;
+
+namespace uLipSync
+{
+
+    [RequireComponent(typeof(AudioSource))]
+    public class uLipSyncMicrophone : MonoBehaviour
+    {
+#if !UNITY_WEBGL || UNITY_EDITOR
+        :
+        :
+#endif
+    }
+}
+```
 
 
 # ❤️ Thanks
