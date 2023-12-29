@@ -4,7 +4,7 @@ mergeInto(LibraryManager.library, {
         const targetMethodName = UTF8ToString(targetMethodNamePtr);
 
         const outputHookNode = WEBAudio.audioContext.createScriptProcessor();
-        outputHookNode.onaudioprocess = function (stream) {
+        outputHookNode.onaudioprocess = function (event) {
             SendMessage(targetObjectName, targetMethodName, event.inputBuffer.getChannelData(0).join(','));
         };
 
